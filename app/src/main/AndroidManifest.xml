@@ -15,8 +15,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" android:theme="@style/AppTheme.fullScreen"/>
-        <activity android:name=".RegisterActivity" android:theme="@style/AppTheme.fullScreen"/>
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.fullScreen" />
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/AppTheme.fullScreen" />
+        <activity android:name=".FriendListActivity" />
+        <activity
+            android:name=".BaseAppActivity"
+            android:label="@string/title_activity_base_app"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".conversation.Chat"></activity>
     </application>
 
 </manifest>

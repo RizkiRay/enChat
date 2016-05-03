@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 boolean isPassInCorrect = checkPassInput();
                 boolean isCanContinue = !(isEmailInCorrect||isPassInCorrect);
                 if(isCanContinue)
-                    Toast.makeText(LoginActivity.this, "Benar", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this,BaseAppActivity.class));
                 break;
             case R.id.btn_regist:
                 startActivity(new Intent(this, RegisterActivity.class));
