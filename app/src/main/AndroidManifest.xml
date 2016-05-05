@@ -24,9 +24,10 @@
         <activity android:name=".FriendListActivity" />
         <activity
             android:name=".BaseAppActivity"
-            android:label="@string/title_activity_base_app"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".conversation.Chat"></activity>
+            android:label="@string/title_activity_base_app" />
+        <activity android:name=".conversation.Chat" />
+        <activity android:name=".friend.ProfileActivity" />
+        <activity android:name=".friend.AddFriend"></activity>
     </application>
 
 </manifest>

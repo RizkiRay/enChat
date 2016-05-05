@@ -8,8 +8,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
@@ -47,6 +51,21 @@ public class ConversationFragment extends Fragment {
         Log.i("CEK","Jalan");
         ConversationAdapter adapter = new ConversationAdapter(dataList);
         recylerView.setAdapter(adapter);
+        setHasOptionsMenu(true);
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.base_app,menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_add){
+            Toast.makeText(getActivity(), "Add on Conversations", Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 }

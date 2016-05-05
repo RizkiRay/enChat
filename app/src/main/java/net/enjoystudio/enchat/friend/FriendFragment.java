@@ -1,5 +1,6 @@
 package net.enjoystudio.enchat.friend;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,8 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
@@ -65,6 +70,21 @@ public class FriendFragment extends Fragment {
         dataList.add(data);
         FriendAdapter adapter = new FriendAdapter(dataList);
         recyclerView.setAdapter(adapter);
+        setHasOptionsMenu(true);
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.base_app, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_add){
+            startActivity(new Intent(getActivity(),AddFriend.class));
+        }
+        return true;
     }
 }
