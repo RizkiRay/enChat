@@ -26,17 +26,17 @@
             android:padding="16dp">
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/til_email"
+                android:id="@+id/til_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/email"
+                    android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_perm_identity_black_24dp"
                     android:drawablePadding="16dp"
-                    android:hint="email"
+                    android:hint="phone"
                     android:inputType="text" />
             </android.support.design.widget.TextInputLayout>
 

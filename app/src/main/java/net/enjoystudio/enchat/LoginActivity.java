@@ -1,9 +1,12 @@
 package net.enjoystudio.enchat;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -12,27 +15,43 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,
         TextView.OnEditorActionListener {
 
     private Button login;
     private TextView regist;
     private EditText editPass;
-    private EditText editEmail;
+    private EditText editPhone;
     private TextInputLayout tilPass;
-    private TextInputLayout tilEmail;
+    private TextInputLayout tilPhone;
+    private SharedPreferences sp;
+    ProgressDialog pd;
 
-    private Boolean checkEmailInput() {
-        String target = editEmail.getText().toString().trim();
+    private Boolean checkPhoneInput() {
+        String target = editPhone.getText().toString().trim();
         if (target.equals("")) {
-            tilEmail.setError("can't be empty");
+            tilPhone.setError("can't be empty");
             return true;
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()) {
-            tilEmail.setError("not a valid email");
-            return true;
+//        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()) {
+//            tilPhone.setError("not a valid email");
+//            return true;
         } else {
-            tilEmail.setError(null);
-            tilEmail.setErrorEnabled(false);
+            tilPhone.setError(null);
+            tilPhone.setErrorEnabled(false);
             return false;
         }
     }
@@ -57,15 +76,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
         login = (Button) findViewById(R.id.btn_login);
         regist = (TextView) findViewById(R.id.btn_regist);
-        editEmail = (EditText) findViewById(R.id.email);
+        editPhone = (EditText) findViewById(R.id.phone);
         editPass = (EditText) findViewById(R.id.password);
-        tilEmail = (TextInputLayout) findViewById(R.id.til_email);
+        tilPhone = (TextInputLayout) findViewById(R.id.til_phone);
         tilPass = (TextInputLayout) findViewById(R.id.til_password);
 
-        editEmail.setOnEditorActionListener(this);
+        editPhone.setOnEditorActionListener(this);
         editPass.setOnEditorActionListener(this);
         login.setOnClickListener(this);
         regist.setOnClickListener(this);
+
+        sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
+        pd = new ProgressDialog(this);
     }
 
     @Override
@@ -73,11 +95,54 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         int id = v.getId();
         switch (id) {
             case R.id.btn_login:
-                boolean isEmailInCorrect = checkEmailInput();
+                boolean isPhoneInCorrect = checkPhoneInput();
                 boolean isPassInCorrect = checkPassInput();
-                boolean isCanContinue = !(isEmailInCorrect||isPassInCorrect);
-                if(isCanContinue)
-                    startActivity(new Intent(this,BaseAppActivity.class));
+                boolean isCanContinue = !(isPhoneInCorrect || isPassInCorrect);
+                if (isCanContinue) {
+                pd.setMessage("Logging in...");
+                pd.show();
+                StringRequest sr = new StringRequest(Request.Method.POST, C.API_LOGIN,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                if (response.trim().equals("g")) {
+                                    Toast.makeText(LoginActivity.this,
+                                            "phone and password is not match",
+                                            Toast.LENGTH_SHORT).show();
+                                    pd.dismiss();
+                                } else {
+                                    try {
+                                        JSONObject jobj = new JSONObject(response);
+                                        sp.edit().putString(C.USER_ID, jobj.getString(C.USER_ID)).commit();
+                                        sp.edit().putString(C.NAME, jobj.getString(C.NAME)).commit();
+                                        sp.edit().putString(C.STATUS, jobj.getString(C.STATUS)).commit();
+                                        sp.edit().putString(C.PROFILE_PICTURE, jobj.getString(C.PROFILE_PICTURE)).commit();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                        pd.dismiss();
+                                    }
+                                    startActivity(new Intent(LoginActivity.this, BaseAppActivity.class));
+                                    finish();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.i("CEK", error.toString());
+                        pd.dismiss();
+                    }
+                }) {
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        HashMap<String, String> params = new HashMap<>();
+                        params.put(C.PHONE, editPhone.getText().toString().trim());
+                        params.put(C.PASSWORD, editPass.getText().toString().trim());
+                        return params;
+                    }
+                };
+                Volley.newRequestQueue(this).add(sr);
+                }
+                //startActivity(new Intent(this,BaseAppActivity.class));
                 break;
             case R.id.btn_regist:
                 startActivity(new Intent(this, RegisterActivity.class));
@@ -88,9 +153,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         int id = v.getId();
-        if (id == R.id.email) {
+        if (id == R.id.phone) {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                return checkEmailInput();
+                return checkPhoneInput();
             }
         }
         if (id == R.id.password) {

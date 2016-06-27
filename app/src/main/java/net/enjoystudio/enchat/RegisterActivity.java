@@ -14,8 +14,8 @@ import android.widget.Toast;
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener,
         TextView.OnEditorActionListener {
 
-    private EditText editEmail;
-    private TextInputLayout tilEmail;
+    private EditText editPhone;
+    private TextInputLayout tilPhone;
     private EditText editPass;
     private TextInputLayout tilPass;
     private Button submit;
@@ -23,17 +23,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextInputLayout tilPassConf;
 
 
-    private Boolean checkEmailInput() {
-        String target = editEmail.getText().toString().trim();
+    private Boolean checkPhoneInput() {
+        String target = editPhone.getText().toString().trim();
         if (target.equals("")) {
-            tilEmail.setError("can't be empty");
+            tilPhone.setError("can't be empty");
             return true;
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()) {
-            tilEmail.setError("not a valid email");
-            return true;
+//        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches()) {
+//            tilPhone.setError("not a valid email");
+//            return true;
         } else {
-            tilEmail.setError(null);
-            tilEmail.setErrorEnabled(false);
+            tilPhone.setError(null);
+            tilPhone.setErrorEnabled(false);
             return false;
         }
     }
@@ -71,14 +71,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         submit = (Button) findViewById(R.id.btn_submit);
-        editEmail = (EditText) findViewById(R.id.email);
+        editPhone = (EditText) findViewById(R.id.phone);
         editPass = (EditText) findViewById(R.id.password);
         editPassConf = (EditText) findViewById(R.id.password_confirm);
-        tilEmail = (TextInputLayout) findViewById(R.id.til_email);
+        tilPhone = (TextInputLayout) findViewById(R.id.til_phone);
         tilPass = (TextInputLayout) findViewById(R.id.til_password);
         tilPassConf = (TextInputLayout) findViewById(R.id.til_password_confirm);
 
-        editEmail.setOnEditorActionListener(this);
+        editPhone.setOnEditorActionListener(this);
         editPass.setOnEditorActionListener(this);
         editPassConf.setOnEditorActionListener(this);
 
@@ -90,11 +90,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         int id = v.getId();
         switch (id) {
             case R.id.btn_submit:
-                boolean isEmailInCorrect = checkEmailInput();
+                boolean isPhoneInCorrect = checkPhoneInput();
                 boolean isPassInCorrect = checkPassInput();
                 boolean isPassNotMatch = checkPassConf();
 
-                boolean isCanContinue = !(isEmailInCorrect||isPassInCorrect||isPassNotMatch);
+                boolean isCanContinue = !(isPhoneInCorrect||isPassInCorrect||isPassNotMatch);
                 if (isCanContinue) {
                     Toast.makeText(RegisterActivity.this, "Betull", Toast.LENGTH_SHORT).show();
                 }
@@ -105,9 +105,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         int id = v.getId();
-        if (id == R.id.email) {
+        if (id == R.id.phone) {
             if (actionId == EditorInfo.IME_ACTION_NEXT)
-                return checkEmailInput();
+                return checkPhoneInput();
         }
         if (id == R.id.password) {
             return checkPassInput();
