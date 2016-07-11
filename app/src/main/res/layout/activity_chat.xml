@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="net.enjoystudio.enchat.conversation.Chat">
 
@@ -73,7 +74,9 @@
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/input" />
+            android:layout_above="@id/input"
+            app:stackFromEnd="true"
+            app:reverseLayout="true"/>
     </RelativeLayout>
 
 </LinearLayout>

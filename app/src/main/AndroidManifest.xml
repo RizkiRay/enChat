@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.enjoystudio.enchat">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,7 +31,9 @@
             android:label="@string/title_activity_base_app" />
         <activity android:name=".conversation.Chat" />
         <activity android:name=".friend.ProfileActivity" />
-        <activity android:name=".friend.AddFriend"></activity>
+        <activity android:name=".friend.AddFriend" />
+        <activity android:name=".YourData" />
+        <activity android:name=".friend.InviteActivity"></activity>
     </application>
 
 </manifest>

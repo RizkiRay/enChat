@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/invite"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btn_check"
+            android:text="details"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"
+            android:textSize="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/txt_invite"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:layout_toLeftOf="@id/btn_check"
+            android:text=" people want to be your friend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@id/recyclerview"
+        android:layout_below="@id/invite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-</LinearLayout>
+</RelativeLayout>

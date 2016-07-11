@@ -1,55 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-tools:context="net.enjoystudio.enchat.friend.AddFriend">
-
-<android.support.design.widget.AppBarLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:theme="@style/AppTheme.AppBarOverlay">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingLeft="16dp"
-        android:paddingBottom="16dp"
-        android:paddingRight="16dp">
-
-        <ImageView
-            android:id="@+id/btn_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_search_white_24dp" />
-
-        <EditText
-            android:id="@+id/editNumber"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/btn_search"
-            android:inputType="number"
-            android:hint="Phone number"
-            android:maxLength="13" />
-    </RelativeLayout>
-</android.support.design.widget.AppBarLayout>
-
-<android.support.v7.widget.CardView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp">
+    android:orientation="vertical"
+    tools:context="net.enjoystudio.enchat.friend.AddFriend">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <ImageView
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/ic_search_white_24dp" />
+
+            <EditText
+                android:id="@+id/editNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/btn_search"
+                android:hint="Phone number"
+                android:inputType="number"
+                android:maxLength="13" />
+        </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
 
     <ProgressBar
         android:id="@+id/pb"
@@ -59,62 +54,79 @@ tools:context="net.enjoystudio.enchat.friend.AddFriend">
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Not Available"
-        android:textSize="21sp"
+        android:id="@+id/mes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Number is not registered"
+        android:textSize="24sp"
         android:visibility="gone" />
 
-    <RelativeLayout
-        android:visibility="visible"
-        android:id="@+id/placeholder"
+    <android.support.v7.widget.CardView
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:visibility="gone">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Not Available"
+            android:textSize="21sp"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/placeholder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:visibility="visible">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/picture"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="50dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/harry" />
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/txt_name"
-                android:layout_width="wrap_content"
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/picture"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginTop="16dp"
+                    android:src="@drawable/harry" />
+
+                <TextView
+                    android:id="@+id/txt_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Harry Potter"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="26sp" />
+
+                <TextView
+                    android:id="@+id/txt_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="087783877939"
+                    android:textSize="21sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="Harry Potter"
-                android:textColor="@color/colorAccent"
-                android:textSize="26sp" />
-
-            <TextView
-                android:id="@+id/txt_phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="087783877939"
-                android:textSize="21sp" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btn_add"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/login_background"
-            android:text="Add as Friend"
-            android:textColor="@android:color/white" />
-    </RelativeLayout>
-</android.support.v7.widget.CardView>
+                android:layout_alignParentBottom="true"
+                android:clickable="true"
+                android:background="@color/colorPrimary"
+                android:text="Add as Friend"
+                android:textColor="@android:color/white" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 </LinearLayout>

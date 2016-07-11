@@ -37,7 +37,7 @@
                     android:drawableLeft="@drawable/ic_perm_identity_black_24dp"
                     android:drawablePadding="16dp"
                     android:hint="phone"
-                    android:inputType="text" />
+                    android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout

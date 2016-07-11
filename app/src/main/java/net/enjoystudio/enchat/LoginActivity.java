@@ -19,7 +19,6 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -32,8 +31,6 @@ import java.util.Map;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,
         TextView.OnEditorActionListener {
 
-    private Button login;
-    private TextView regist;
     private EditText editPass;
     private EditText editPhone;
     private TextInputLayout tilPass;
@@ -74,8 +71,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        login = (Button) findViewById(R.id.btn_login);
-        regist = (TextView) findViewById(R.id.btn_regist);
+        Button login = (Button) findViewById(R.id.btn_login);
+        TextView regist = (TextView) findViewById(R.id.btn_regist);
         editPhone = (EditText) findViewById(R.id.phone);
         editPass = (EditText) findViewById(R.id.password);
         tilPhone = (TextInputLayout) findViewById(R.id.til_phone);
@@ -113,10 +110,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 } else {
                                     try {
                                         JSONObject jobj = new JSONObject(response);
-                                        sp.edit().putString(C.USER_ID, jobj.getString(C.USER_ID)).commit();
-                                        sp.edit().putString(C.NAME, jobj.getString(C.NAME)).commit();
-                                        sp.edit().putString(C.STATUS, jobj.getString(C.STATUS)).commit();
-                                        sp.edit().putString(C.PROFILE_PICTURE, jobj.getString(C.PROFILE_PICTURE)).commit();
+                                        sp.edit().putString(C.USER_ID, jobj.getString(C.USER_ID)).apply();
+                                        sp.edit().putString(C.NAME, jobj.getString(C.NAME)).apply();
+                                        sp.edit().putString(C.STATUS, jobj.getString(C.STATUS)).apply();
+                                        sp.edit().putString(C.PROFILE_PICTURE, jobj.getString(C.PROFILE_PICTURE)).apply();
+                                        sp.edit().putString(C.PHONE, jobj.getString(C.PHONE)).apply();
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                         pd.dismiss();
