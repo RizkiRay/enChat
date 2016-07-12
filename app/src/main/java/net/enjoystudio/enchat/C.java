@@ -20,6 +20,7 @@ public class C {
     public static final String RECEIVER_ID = "receiver_id";
     public static final String CONTENT = "content";
     public static final String CREATED_AT = "created_at";
+    public static final String TOKEN = "token";
 
     public static final String API_LOGIN = "http://enjoystudio.net/enchat/api/login.php";
     public static final String API_REGISTER = "http://enjoystudio.net/enchat/api/register.php";
@@ -32,4 +33,5 @@ public class C {
     public static final String API_REJECT_FRIENDS = "http://enjoystudio.net/enchat/api/rejectFriend.php?";
     public static final String API_ADD_FRIENDS = "http://enjoystudio.net/enchat/api/addFriend.php";
     public static final String API_GET_MESSAGE = "http://enjoystudio.net/enchat/api/getMessage.php";
+    public static final String API_UPDATE_TOKEN = "http://enjoystudio.net/enchat/api/updateToken.php";
 }

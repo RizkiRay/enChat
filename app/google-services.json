@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "329655040861",
+    "firebase_url": "https://enchat-1291.firebaseio.com",
+    "project_id": "enchat-1291",
+    "storage_bucket": "enchat-1291.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329655040861:android:aec7366526132abe",
+        "android_client_info": {
+          "package_name": "net.enjoy.enchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "329655040861-pqk5l16olq991l6lfc8fc1jmq5am2k5r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDg5m18feieXsPxpylrrQ6QvGCoTjwgRZc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329655040861:android:f36fb57dcc2ecaca",
+        "android_client_info": {
+          "package_name": "net.enjoystudio.enchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "329655040861-pqk5l16olq991l6lfc8fc1jmq5am2k5r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDg5m18feieXsPxpylrrQ6QvGCoTjwgRZc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

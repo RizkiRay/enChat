@@ -20,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import net.enjoystudio.enchat.conversation.ConversationFragment;
@@ -48,7 +50,8 @@ public class BaseAppActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
+        FirebaseMessaging.getInstance().subscribeToTopic("enChat");
+        FirebaseInstanceId.getInstance().getToken();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View v = navigationView.getHeaderView(0);
         profPict = (CircleImageView) v.findViewById(R.id.profile_pict);
