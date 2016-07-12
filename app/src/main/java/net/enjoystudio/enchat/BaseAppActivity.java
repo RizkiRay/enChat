@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,12 +21,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import net.enjoystudio.enchat.conversation.ConversationFragment;
 import net.enjoystudio.enchat.friend.FriendFragment;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -42,16 +52,13 @@ public class BaseAppActivity extends AppCompatActivity
         setContentView(R.layout.activity_base_app);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
-
+        updateToken();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-        FirebaseMessaging.getInstance().subscribeToTopic("enChat");
-        FirebaseInstanceId.getInstance().getToken();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View v = navigationView.getHeaderView(0);
         profPict = (CircleImageView) v.findViewById(R.id.profile_pict);
@@ -67,6 +74,28 @@ public class BaseAppActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new ConversationFragment())
                     .commit();
         }
+    }
+    private void updateToken(){
+        StringRequest sr = new StringRequest(Request.Method.POST, C.API_UPDATE_TOKEN, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String,String> params = new HashMap<>();
+                params.put(C.TOKEN, sp.getString(C.TOKEN,"0"));
+                params.put(C.USER_ID, sp.getString(C.USER_ID,"0"));
+                return params;
+            }
+        };
+        Volley.newRequestQueue(this).add(sr);
     }
 
     @Override

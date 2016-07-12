@@ -1,9 +1,14 @@
 package net.enjoystudio.enchat.conversation;
 
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,19 +17,22 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import net.enjoystudio.enchat.BaseAppActivity;
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
 
@@ -32,6 +40,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +76,8 @@ public class Chat extends AppCompatActivity {
         chatHolder = (RecyclerView) findViewById(R.id.recyclerview);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setStackFromEnd(true);
+        LocalBroadcastManager.getInstance(this).
+                registerReceiver(broadCastReceiver, new IntentFilter(C.UPDATE_MESSAGE));
         chatHolder.setLayoutManager(manager);
         adapter = new ChatAdapter(chatList);
         chatHolder.setAdapter(adapter);
@@ -88,13 +99,42 @@ public class Chat extends AppCompatActivity {
         editChat.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_SEND)
+                if (actionId == EditorInfo.IME_ACTION_SEND)
                     send();
                 return true;
             }
         });
     }
 
+    private BroadcastReceiver broadCastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {HashMap<String, String> chat = new HashMap<>();
+            chat.put(C.SENDER_ID, id);
+            chat.put(C.RECEIVER_ID, myId);
+            chat.put(C.CONTENT, intent.getExtras().getString(C.CONTENT));
+            chatList.add(chat);
+            adapter.notifyItemInserted(chatList.size() - 1);
+            chatHolder.scrollToPosition(chatList.size() - 1);
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        sp.edit().putString(C.ISACTIVE, "1;" + id).apply();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        sp.edit().putString(C.ISACTIVE, "0;" + id).apply();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadCastReceiver);
+    }
     private void send() {
         if (!editChat.getText().toString().equals("")) {
             String konten = editChat.getText().toString();
@@ -102,18 +142,46 @@ public class Chat extends AppCompatActivity {
             chat.put(C.SENDER_ID, myId);
             chat.put(C.RECEIVER_ID, id);
             chat.put(C.CONTENT, konten);
-            chat.put(C.CREATED_AT, "");
             chatList.add(chat);
             adapter.notifyItemInserted(chatList.size() - 1);
             chatHolder.scrollToPosition(chatList.size() - 1);
             editChat.setText("");
+            sendMessage(chat);
         }
     }
 
+    private void sendMessage(final HashMap<String, String> data) {
+        StringRequest sr = new StringRequest(Request.Method.POST, C.API_SEND_MESSAGE, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("CEK", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("CEK", error.toString());
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return data;
+            }
+        };
+        sr.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(this).add(sr);
+    }
+
     private void getMessage() {
+        final ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("loading...");
+        pd.show();
         StringRequest sr = new StringRequest(Request.Method.POST, C.API_GET_MESSAGE, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                pd.dismiss();
                 try {
 
                     if (response.trim().equals("k")) {
@@ -139,6 +207,7 @@ public class Chat extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pd.dismiss();
                 Log.i("CEK-CHAT-VOLLEY", error.toString());
             }
         }) {
@@ -158,9 +227,54 @@ public class Chat extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Gson gson = new Gson();
+        ArrayList<HashMap<String,String>> cList;
+        Type type = new TypeToken<ArrayList<HashMap<String,String>>>(){}.getType();
+        cList = gson.fromJson(sp.getString(C.CONVERSATION,""),type);
+        if (cList == null) cList = new ArrayList<>();
+        if(chatList.size()>0) {
+            int pos = getPos(getIntent().getExtras().getString(C.USER_ID));
+            Log.i("CEK",pos+"");
+            HashMap<String, String> conv = new HashMap<>();
+            conv.put(C.USER_ID, getIntent().getExtras().getString(C.USER_ID));
+            conv.put(C.PHOTO, getIntent().getExtras().getString(C.PHOTO));
+            conv.put(C.NAME, getIntent().getExtras().getString(C.NAME));
+            conv.put(C.STATUS, getIntent().getExtras().getString(C.STATUS));
+            conv.put(C.CHAT, chatList.get(chatList.size() - 1).get(C.CONTENT));
+            if(pos!=-1) {
+                cList.remove(pos);
+                cList.add(pos,conv);
+                Log.i("CEK", chatList.size() + "");
+            }
+            else cList.add(conv);
+            sp.edit().putString(C.CONVERSATION, gson.toJson(cList)).apply();
+        }
+        finish();
+        startActivity(new Intent(this, BaseAppActivity.class));
+    }
+    private int getPos(String id) {
+        Gson gson = new Gson();
+        SharedPreferences sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
+        String data = sp.getString(C.CONVERSATION, "");
+        Type type = new TypeToken<ArrayList<HashMap<String, String>>>() {
+        }.getType();
+        ArrayList<HashMap<String, String>> cList = gson.fromJson(data, type);
+        if (cList == null) cList = new ArrayList<>();
+        for (int i = 0; i < cList.size(); i++) {
+            HashMap<String,String> conv = cList.get(i);
+            if(conv.get(C.USER_ID).equals(id)){
+                return i;
+            }
+        }
+        return -1;
     }
 }

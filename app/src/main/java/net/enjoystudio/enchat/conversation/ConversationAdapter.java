@@ -43,7 +43,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         final HashMap<String, String> data = dataList.get(position);
         Picasso.with(context)
-                .load(Integer.parseInt(data.get(C.PHOTO))).centerCrop().fit().into(holder.photo);
+                .load(C.API_IMAGE + C.PROFILE_PICTURE + "/" + data.get(C.PHOTO)).centerCrop().fit().into(holder.photo);
         holder.name.setText(data.get(C.NAME));
         holder.chat.setText(data.get(C.CHAT));
         holder.date.setText(data.get(C.DATE));
@@ -52,7 +52,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             public void onClick(View v) {
                 Intent i = new Intent(context,Chat.class);
                 i.putExtra(C.NAME,data.get(C.NAME));
-                i.putExtra(C.STATUS,"Hello World !!!");
+                i.putExtra(C.STATUS,data.get(C.STATUS));
+                i.putExtra(C.USER_ID, data.get(C.USER_ID));
+                i.putExtra(C.PHOTO, data.get(C.PHOTO));
                 context.startActivity(i);
             }
         });

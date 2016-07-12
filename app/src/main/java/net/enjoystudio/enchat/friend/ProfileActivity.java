@@ -42,7 +42,7 @@ public class ProfileActivity extends AppCompatActivity {
 //        editStatus = (EditText) findViewById(R.id.edit_status);
         txtStatus = (TextView) findViewById(R.id.txt_status);
         Picasso.with(this).load(C.API_IMAGE + C.PROFILE_PICTURE + "/" + photo)
-                .centerCrop().fit().into(picture);
+                .centerInside().fit().into(picture);
         txtName.setText(name);
         txtStatus.setText(status);
         Log.i("CEK",phone);

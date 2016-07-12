@@ -9,6 +9,7 @@ public class C {
     public static final String USER_2 = "user_2";
     public static final String PROFILE_PICTURE = "profile_picture";
     public static final String PHOTO = "photo";
+    public static final String ISACTIVE = "isactive";
     public static final String NAME = "name";
     public static final String CHAT = "chat";
     public static final String DATE = "date";
@@ -21,6 +22,9 @@ public class C {
     public static final String CONTENT = "content";
     public static final String CREATED_AT = "created_at";
     public static final String TOKEN = "token";
+    public static final String CONVERSATION = "conversation";
+    public static final String UPDATE_MESSAGE = "update_message" ;
+    public static final String UPDATE_CONVERSATION = "update_conversation" ;
 
     public static final String API_LOGIN = "http://enjoystudio.net/enchat/api/login.php";
     public static final String API_REGISTER = "http://enjoystudio.net/enchat/api/register.php";
@@ -33,5 +37,6 @@ public class C {
     public static final String API_REJECT_FRIENDS = "http://enjoystudio.net/enchat/api/rejectFriend.php?";
     public static final String API_ADD_FRIENDS = "http://enjoystudio.net/enchat/api/addFriend.php";
     public static final String API_GET_MESSAGE = "http://enjoystudio.net/enchat/api/getMessage.php";
+    public static final String API_SEND_MESSAGE = "http://enjoystudio.net/enchat/api/sendMessage.php";
     public static final String API_UPDATE_TOKEN = "http://enjoystudio.net/enchat/api/updateToken.php";
 }

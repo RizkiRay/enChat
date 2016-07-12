@@ -68,6 +68,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                 i.putExtra(C.NAME,data.get(C.NAME));
                 i.putExtra(C.STATUS,data.get(C.STATUS));
                 i.putExtra(C.USER_ID, data.get(C.USER_ID));
+                i.putExtra(C.PHOTO, data.get(C.PHOTO));
                 context.startActivity(i);
             }
         });

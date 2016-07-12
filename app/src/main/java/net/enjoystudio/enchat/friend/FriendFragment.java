@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -35,6 +36,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -47,7 +50,7 @@ public class FriendFragment extends Fragment {
     private ProgressBar progressBar;
     private RelativeLayout rl;
     private TextView txtInvite;
-    private Button  btnDetails;
+//    private Button  btnDetails;
     private int invitation=0;
 
     @Nullable
@@ -60,7 +63,7 @@ public class FriendFragment extends Fragment {
         sp = getActivity().getSharedPreferences(C.SESSION, Context.MODE_PRIVATE);
         rl = (RelativeLayout) v.findViewById(R.id.invite);
         txtInvite = (TextView) v.findViewById(R.id.txt_invite);
-        btnDetails = (Button) v.findViewById(R.id.btn_check);
+//        btnDetails = (Button) v.findViewById(R.id.btn_check);
         dataList = new ArrayList<>();
         iv = new ArrayList<>();
         dataAdd = new ArrayList<>();
@@ -98,7 +101,7 @@ public class FriendFragment extends Fragment {
 //        FriendAdapter adapter = new FriendAdapter(dataList);
 //        recyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
-        btnDetails.setOnClickListener(new View.OnClickListener() {
+        txtInvite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i("CEK",iv.toString());
@@ -108,16 +111,15 @@ public class FriendFragment extends Fragment {
         });
         return v;
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.base_app, menu);
+    }
 
     @Override
     public void onResume() {
         super.onResume();
         getFriendList();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.base_app, menu);
     }
 
     private void getFriendList(){
@@ -188,6 +190,11 @@ public class FriendFragment extends Fragment {
                 else {
                     rl.setVisibility(View.GONE);
                 }
+                Collections.sort(dataList,new Comparator<HashMap<String,String>>() {
+                            public int compare(HashMap<String, String> mapping1, HashMap<String, String> mapping2) {
+                                return mapping1.get(C.NAME).compareTo(mapping2.get(C.NAME));
+                            }
+                        });
                  FriendAdapter adapter = new FriendAdapter(dataList);
                  recyclerView.setAdapter(adapter);
             }
@@ -198,6 +205,10 @@ public class FriendFragment extends Fragment {
                 Log.i("CEKFRIEND", error.toString());
             }
         });
+        jar.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(getActivity()).add(jar);
     }
 

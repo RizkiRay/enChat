@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 public class SplashScreen extends AppCompatActivity {
     private SharedPreferences sp;
     @Override
@@ -13,6 +16,8 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
+        FirebaseMessaging.getInstance().subscribeToTopic("enChat");
+//        FirebaseInstanceId.getInstance().getToken();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
