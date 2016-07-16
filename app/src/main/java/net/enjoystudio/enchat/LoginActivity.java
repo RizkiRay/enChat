@@ -102,11 +102,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
+                                pd.dismiss();
                                 if (response.trim().equals("g")) {
                                     Toast.makeText(LoginActivity.this,
                                             "phone and password is not match",
                                             Toast.LENGTH_SHORT).show();
-                                    pd.dismiss();
                                 } else {
                                     try {
                                         JSONObject jobj = new JSONObject(response);
@@ -117,7 +117,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         sp.edit().putString(C.PHONE, jobj.getString(C.PHONE)).apply();
                                     } catch (JSONException e) {
                                         e.printStackTrace();
-                                        pd.dismiss();
                                     }
                                     startActivity(new Intent(LoginActivity.this, BaseAppActivity.class));
                                     finish();

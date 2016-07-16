@@ -4,6 +4,11 @@ package net.enjoystudio.enchat;
  * Created by rizki on 5/4/2016.
  */
 public class C {
+    public static final String CHARSET = "ISO_8859_1";
+    public static final char[] ALPHANUMERIK = ("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                                               "abcdefghijklmnopqrstuvwxyz" +
+                                               "1234567890").toCharArray();
+    public static final String ID = "id";
     public static final String USER_ID = "user_id";
     public static final String USER_1 = "user_1";
     public static final String USER_2 = "user_2";
@@ -38,5 +43,4 @@ public class C {
     public static final String API_ADD_FRIENDS = "http://enjoystudio.net/enchat/api/addFriend.php";
     public static final String API_GET_MESSAGE = "http://enjoystudio.net/enchat/api/getMessage.php";
     public static final String API_SEND_MESSAGE = "http://enjoystudio.net/enchat/api/sendMessage.php";
-    public static final String API_UPDATE_TOKEN = "http://enjoystudio.net/enchat/api/updateToken.php";
 }

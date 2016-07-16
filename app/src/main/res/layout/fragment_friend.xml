@@ -8,20 +8,20 @@
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/empty"
+        android:text="@string/friend_empty"
+        android:textSize="24dp"
+        android:textColor="@color/colorAccent"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <RelativeLayout
         android:visibility="gone"
         android:id="@+id/invite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <!--<Button-->
-            <!--android:id="@+id/btn_check"-->
-            <!--android:text="details"-->
-            <!--android:background="@color/colorPrimary"-->
-            <!--android:textColor="@android:color/white"-->
-            <!--android:textSize="12dp"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
         <TextView
             android:id="@+id/txt_invite"
             android:clickable="true"
@@ -29,8 +29,16 @@
             android:padding="24dp"
             android:gravity="center"
             android:text=" people want to be your friend"
+            android:textSize="16sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <View
+            android:layout_below="@id/txt_invite"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_height="1dp"
+            android:background="@color/colorDivider"/>
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@id/recyclerview"

@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
+import net.enjoystudio.enchat.friend.FriendFragment;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -44,8 +46,24 @@ public class ConversationFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_conversation,container,false);
         recylerView = (RecyclerView) v.findViewById(R.id.recyclerview);
         recylerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        TextView emptyMessage = (TextView) v.findViewById(R.id.empty);
+        emptyMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container,new FriendFragment()).commit();
+            }
+        });
         getConv();
-        if(dataList==null)dataList = new ArrayList<>();
+        if(dataList==null){
+            dataList = new ArrayList<>();
+            emptyMessage.setVisibility(View.VISIBLE);
+            recylerView.setVisibility(View.GONE);
+        }
+        else {
+            emptyMessage.setVisibility(View.GONE);
+            recylerView.setVisibility(View.VISIBLE);
+        }
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Conversations");
 //        HashMap<String,String> data = new HashMap<>();
 //        data.put(C.PHOTO,Integer.toString(R.drawable.john));

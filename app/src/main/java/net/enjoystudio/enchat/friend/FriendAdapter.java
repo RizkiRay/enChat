@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import net.enjoystudio.enchat.BaseAppActivity;
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
 import net.enjoystudio.enchat.conversation.Chat;
@@ -69,6 +70,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
                 i.putExtra(C.STATUS,data.get(C.STATUS));
                 i.putExtra(C.USER_ID, data.get(C.USER_ID));
                 i.putExtra(C.PHOTO, data.get(C.PHOTO));
+                ((BaseAppActivity)context).finish();
                 context.startActivity(i);
             }
         });

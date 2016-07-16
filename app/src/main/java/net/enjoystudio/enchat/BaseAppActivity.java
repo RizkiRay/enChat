@@ -53,7 +53,6 @@ public class BaseAppActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
-        updateToken();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -74,28 +73,6 @@ public class BaseAppActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.container,new ConversationFragment())
                     .commit();
         }
-    }
-    private void updateToken(){
-        StringRequest sr = new StringRequest(Request.Method.POST, C.API_UPDATE_TOKEN, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String,String> params = new HashMap<>();
-                params.put(C.TOKEN, sp.getString(C.TOKEN,"0"));
-                params.put(C.USER_ID, sp.getString(C.USER_ID,"0"));
-                return params;
-            }
-        };
-        Volley.newRequestQueue(this).add(sr);
     }
 
     @Override

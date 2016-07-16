@@ -32,6 +32,7 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import net.enjoystudio.enchat.AES;
 import net.enjoystudio.enchat.BaseAppActivity;
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
@@ -40,7 +41,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,12 +53,13 @@ public class Chat extends AppCompatActivity {
     private EditText editChat;
     private TextView textName;
     private TextView textStatus;
-    private String id, myId;
+    private String id, myId, cID;
     private SharedPreferences sp;
     private ArrayList<HashMap<String, String>> chatList;
     private RecyclerView chatHolder;
     private ImageView buttonSend;
     private ChatAdapter adapter;
+    boolean isGenerated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,18 @@ public class Chat extends AppCompatActivity {
         String status = getIntent().getStringExtra(C.STATUS);
         sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
         id = getIntent().getStringExtra(C.USER_ID);
+        Log.i("CEKSP", C.CONVERSATION + id);
+        Log.i("CEKSP", sp.getString(C.CONVERSATION + id,""));
+        if (!sp.getString(C.CONVERSATION + id,"").equals("")){
+            isGenerated = true;
+            cID = sp.getString(C.CONVERSATION + id, "");
+            Log.i("CEKKEYtrue", cID);
+        }
+        else {
+            isGenerated = false;
+            cID = AES.randomString();
+            Log.i("CEKKEYfalse", cID);
+        }
         myId = sp.getString(C.USER_ID, "0");
         chatList = new ArrayList<>();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -108,7 +124,8 @@ public class Chat extends AppCompatActivity {
 
     private BroadcastReceiver broadCastReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {HashMap<String, String> chat = new HashMap<>();
+        public void onReceive(Context context, Intent intent) {
+            HashMap<String, String> chat = new HashMap<>();
             chat.put(C.SENDER_ID, id);
             chat.put(C.RECEIVER_ID, myId);
             chat.put(C.CONTENT, intent.getExtras().getString(C.CONTENT));
@@ -135,6 +152,7 @@ public class Chat extends AppCompatActivity {
         sp.edit().putString(C.ISACTIVE, "0;" + id).apply();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadCastReceiver);
     }
+
     private void send() {
         if (!editChat.getText().toString().equals("")) {
             String konten = editChat.getText().toString();
@@ -146,11 +164,13 @@ public class Chat extends AppCompatActivity {
             adapter.notifyItemInserted(chatList.size() - 1);
             chatHolder.scrollToPosition(chatList.size() - 1);
             editChat.setText("");
-            sendMessage(chat);
+            sendMessage(konten);
         }
+
     }
 
-    private void sendMessage(final HashMap<String, String> data) {
+    private void sendMessage(final String message) {
+
         StringRequest sr = new StringRequest(Request.Method.POST, C.API_SEND_MESSAGE, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -164,7 +184,19 @@ public class Chat extends AppCompatActivity {
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                return data;
+                byte[] enc = AES.encrypt(message.getBytes(Charset.forName(C.CHARSET))
+                        , cID.getBytes(Charset.forName(C.CHARSET)));
+                String cipher = new String(enc, Charset.forName(C.CHARSET));
+                HashMap<String, String> params = new HashMap<>();
+                if (isGenerated) params.put(C.ID,"0");
+                else {
+                    params.put(C.ID, cID);
+                    sp.edit().putString(C.CONVERSATION + id,cID).apply();
+                }
+                params.put(C.SENDER_ID, myId);
+                params.put(C.RECEIVER_ID, id);
+                params.put(C.CONTENT, cipher);
+                return params;
             }
         };
         sr.setRetryPolicy(new DefaultRetryPolicy(
@@ -183,17 +215,26 @@ public class Chat extends AppCompatActivity {
             public void onResponse(String response) {
                 pd.dismiss();
                 try {
-
-                    if (response.trim().equals("k")) {
-
-                    } else {
+//                    if (chatList.size()==0){
+//                        isGenerated = false;
+//                        cID = AES.randomString();
+//                        Log.i("CEKKEY 0",cID);
+//                    }
+//                    else {
+//                        isGenerated = true;
+//                        cID = getID();
+//                        Log.i("CEKKEY !0", cID);
+//                    }
+                    if (!response.trim().equals("k")) {
                         JSONArray list = new JSONArray(response);
                         for (int i = 0; i < list.length(); i++) {
                             HashMap<String, String> chat = new HashMap<>();
                             JSONObject data = list.getJSONObject(i);
                             chat.put(C.SENDER_ID, data.getString(C.SENDER_ID));
                             chat.put(C.RECEIVER_ID, data.getString(C.RECEIVER_ID));
-                            chat.put(C.CONTENT, data.getString(C.CONTENT));
+                            chat.put(C.CONTENT, new String(AES.decrypt(data.getString(C.CONTENT)
+                                    .getBytes(Charset.forName(C.CHARSET)), cID
+                                    .getBytes(Charset.forName(C.CHARSET))), Charset.forName(C.CHARSET)));
                             chat.put(C.CREATED_AT, data.getString(C.CREATED_AT));
                             chatList.add(chat);
                             adapter.notifyItemInserted(chatList.size() - 1);
@@ -237,30 +278,32 @@ public class Chat extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Gson gson = new Gson();
-        ArrayList<HashMap<String,String>> cList;
-        Type type = new TypeToken<ArrayList<HashMap<String,String>>>(){}.getType();
-        cList = gson.fromJson(sp.getString(C.CONVERSATION,""),type);
+        ArrayList<HashMap<String, String>> cList;
+        Type type = new TypeToken<ArrayList<HashMap<String, String>>>() {
+        }.getType();
+        cList = gson.fromJson(sp.getString(C.CONVERSATION, ""), type);
         if (cList == null) cList = new ArrayList<>();
-        if(chatList.size()>0) {
+        if (chatList.size() > 0) {
             int pos = getPos(getIntent().getExtras().getString(C.USER_ID));
-            Log.i("CEK",pos+"");
+            Log.i("CEK", pos + "");
             HashMap<String, String> conv = new HashMap<>();
+            conv.put(C.ID, cID);
             conv.put(C.USER_ID, getIntent().getExtras().getString(C.USER_ID));
             conv.put(C.PHOTO, getIntent().getExtras().getString(C.PHOTO));
             conv.put(C.NAME, getIntent().getExtras().getString(C.NAME));
             conv.put(C.STATUS, getIntent().getExtras().getString(C.STATUS));
             conv.put(C.CHAT, chatList.get(chatList.size() - 1).get(C.CONTENT));
-            if(pos!=-1) {
+            if (pos != -1) {
                 cList.remove(pos);
-                cList.add(pos,conv);
+                cList.add(pos, conv);
                 Log.i("CEK", chatList.size() + "");
-            }
-            else cList.add(conv);
+            } else cList.add(conv);
             sp.edit().putString(C.CONVERSATION, gson.toJson(cList)).apply();
         }
         finish();
         startActivity(new Intent(this, BaseAppActivity.class));
     }
+
     private int getPos(String id) {
         Gson gson = new Gson();
         SharedPreferences sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
@@ -270,11 +313,23 @@ public class Chat extends AppCompatActivity {
         ArrayList<HashMap<String, String>> cList = gson.fromJson(data, type);
         if (cList == null) cList = new ArrayList<>();
         for (int i = 0; i < cList.size(); i++) {
-            HashMap<String,String> conv = cList.get(i);
-            if(conv.get(C.USER_ID).equals(id)){
+            HashMap<String, String> conv = cList.get(i);
+            if (conv.get(C.USER_ID).equals(id)) {
                 return i;
             }
         }
         return -1;
     }
+
+//    private String getID() {
+//        int pos = getPos(getIntent().getExtras().getString(C.USER_ID));
+//        Gson gson = new Gson();
+//        SharedPreferences sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
+//        String data = sp.getString(C.CONVERSATION, "");
+//        Type type = new TypeToken<ArrayList<HashMap<String, String>>>() {
+//        }.getType();
+//        ArrayList<HashMap<String, String>> cList = gson.fromJson(data, type);
+//        HashMap<String, String> c = cList.get(pos);
+//        return c.get(C.ID);
+//    }
 }

@@ -18,11 +18,13 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import net.enjoystudio.enchat.AES;
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
 import net.enjoystudio.enchat.conversation.Chat;
 
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -40,18 +42,25 @@ public class MessagingService extends FirebaseMessagingService {
         String sender = remoteMessage.getData().get(C.SENDER_ID);
         String name = remoteMessage.getData().get(C.NAME);
         String status = remoteMessage.getData().get(C.STATUS);
-        String message = remoteMessage.getData().get("message");
+
+        String cID = remoteMessage.getData().get(C.ID);
         String photo = remoteMessage.getData().get(C.PHOTO);
         String isActive = sp.getString(C.ISACTIVE, "0;0").split(";")[0];
         String id = sp.getString(C.ISACTIVE, "0;0").split(";")[1];
-        if (isActive.equals("1") && id.equals(sender)) {
-            Intent intent = new Intent(C.UPDATE_MESSAGE);
-            intent.putExtra(C.CONTENT, message);
-            intent.putExtra(C.RECEIVER_ID, receiver);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-            Log.i("CEK", isActive + " " + id + " " + receiver);
-        } else {
-            if (receiver.equals(sp.getString(C.USER_ID, "0"))) {
+        if (receiver.equals(sp.getString(C.USER_ID, "0"))) {
+            if (cID.equals("0")) cID = sp.getString(C.CONVERSATION + sender,"0");
+            else sp.edit().putString(C.CONVERSATION + sender,cID).apply();
+            Log.i("CEKKEY", cID + " tes");
+            String message = new String(AES.decrypt(remoteMessage.getData().get("message")
+                    .getBytes(Charset.forName(C.CHARSET)), cID
+                    .getBytes(Charset.forName(C.CHARSET))), Charset.forName(C.CHARSET));
+            if (isActive.equals("1") && id.equals(sender)) {
+                Intent intent = new Intent(C.UPDATE_MESSAGE);
+                intent.putExtra(C.CONTENT, message);
+                intent.putExtra(C.RECEIVER_ID, receiver);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+                Log.i("CEK", isActive + " " + id + " " + receiver);
+            } else {
                 Intent i = new Intent(this, Chat.class);
                 i.putExtra(C.NAME, name);
                 i.putExtra(C.STATUS, status);
@@ -64,23 +73,21 @@ public class MessagingService extends FirebaseMessagingService {
                 cList = gson.fromJson(sp.getString(C.CONVERSATION, ""), type);
                 if (cList == null) cList = new ArrayList<>();
                 int pos = getPos(sender);
-                HashMap<String,String> conv = new HashMap<>();
+                HashMap<String, String> conv = new HashMap<>();
                 conv.put(C.USER_ID, sender);
                 conv.put(C.PHOTO, photo);
                 conv.put(C.NAME, name);
                 conv.put(C.STATUS, status);
                 conv.put(C.CHAT, message);
-                if(pos!=-1) {
+                if (pos != -1) {
                     cList.remove(pos);
-                    cList.add(pos,conv);
-                }
-                else cList.add(conv);
+                    cList.add(pos, conv);
+                } else cList.add(conv);
                 sp.edit().putString(C.CONVERSATION, gson.toJson(cList)).apply();
                 Intent intent = new Intent(C.UPDATE_CONVERSATION);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             }
         }
-
     }
 
     private void sendNotif(String judul, String message, Intent i) {
@@ -109,11 +116,23 @@ public class MessagingService extends FirebaseMessagingService {
         ArrayList<HashMap<String, String>> cList = gson.fromJson(data, type);
         if (cList == null) cList = new ArrayList<>();
         for (int i = 0; i < cList.size(); i++) {
-            HashMap<String,String> conv = cList.get(i);
-            if(conv.get(C.USER_ID).equals(id)){
+            HashMap<String, String> conv = cList.get(i);
+            if (conv.get(C.USER_ID).equals(id)) {
                 return i;
             }
         }
         return -1;
     }
+
+//    private String getID(String id) {
+//        int pos = getPos(id);
+//        Gson gson = new Gson();
+//        SharedPreferences sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
+//        String data = sp.getString(C.CONVERSATION, "");
+//        Type type = new TypeToken<ArrayList<HashMap<String, String>>>() {
+//        }.getType();
+//        ArrayList<HashMap<String, String>> cList = gson.fromJson(data, type);
+//        HashMap<String, String> c = cList.get(pos);
+//        return c.get(C.ID);
+//    }
 }
