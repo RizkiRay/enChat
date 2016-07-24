@@ -28,9 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class BaseAppActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private TextView name, status;
     private SharedPreferences sp;
-    private CircleImageView profPict;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +40,15 @@ public class BaseAppActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        assert drawer != null;
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        assert navigationView != null;
         View v = navigationView.getHeaderView(0);
-        profPict = (CircleImageView) v.findViewById(R.id.profile_pict);
-        name = (TextView)v.findViewById(R.id.name);
-        status = (TextView) v.findViewById(R.id.status);
+        CircleImageView profPict = (CircleImageView) v.findViewById(R.id.profile_pict);
+        TextView name = (TextView) v.findViewById(R.id.name);
+        TextView status = (TextView) v.findViewById(R.id.status);
 
         Picasso.with(this).load(C.API_IMAGE + C.PROFILE_PICTURE + "/" + sp.getString(C.PROFILE_PICTURE, "0"))
                 .fit().centerInside().into(profPict);
@@ -64,6 +64,7 @@ public class BaseAppActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        assert drawer != null;
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -89,7 +90,7 @@ public class BaseAppActivity extends AppCompatActivity
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            sp.edit().clear().commit();
+                            sp.edit().clear().apply();
                             startActivity(new Intent(BaseAppActivity.this, LoginActivity.class));
                             finish();
                         }
@@ -97,11 +98,13 @@ public class BaseAppActivity extends AppCompatActivity
                     .setNegativeButton("No", null);
             AlertDialog dialog = builder.create();
             dialog.show();
-        } else if (id == R.id.nav_about) {
-
         }
+//        else if (id == R.id.nav_about) {
+//
+//        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        assert drawer != null;
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

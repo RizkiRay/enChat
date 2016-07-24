@@ -4,7 +4,6 @@ package net.enjoystudio.enchat;
  * Created by rizki on 5/4/2016.
  */
 public class C {
-    public static final String CHARSET = "ISO_8859_1";
     public static final char[] ALPHANUMERIK = ("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                                                "abcdefghijklmnopqrstuvwxyz" +
                                                "1234567890").toCharArray();

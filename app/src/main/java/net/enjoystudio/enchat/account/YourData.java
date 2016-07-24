@@ -8,9 +8,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import net.enjoystudio.enchat.BaseAppActivity;
 import net.enjoystudio.enchat.C;
@@ -42,14 +43,12 @@ public class YourData extends AppCompatActivity {
 
     private CircleImageView proPict;
     private EditText name;
-    private Button fin;
     private SharedPreferences sp;
     private ProgressDialog pd;
 
-    static String pict ="", uploadFileName="",foto="";
+    static String pict ="";
     private static final int SELECT_PHOTO = 100;
     private String encodedString;
-    private final int DIALOG_ID = 0;
 
 
     @Override
@@ -60,7 +59,7 @@ public class YourData extends AppCompatActivity {
         sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
         proPict = (CircleImageView) findViewById(R.id.profile_pict);
         name = (EditText) findViewById(R.id.name);
-        fin = (Button) findViewById(R.id.finish);
+        Button fin = (Button) findViewById(R.id.finish);
         pd = new ProgressDialog(this);
 
         proPict.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +70,8 @@ public class YourData extends AppCompatActivity {
                 startActivityForResult(photoPickerIntent, SELECT_PHOTO);
             }
         });
+
+        assert fin != null;
         fin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +84,7 @@ public class YourData extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             pd.dismiss();
-                            if (response.trim().toString().equals("g")) {
+                            if (response.trim().equals("g")) {
                                 Toast.makeText(YourData.this, "Please try again", Toast.LENGTH_SHORT).show();
                             } else {
                                 try {
@@ -107,7 +108,7 @@ public class YourData extends AppCompatActivity {
                     }) {
                         @Override
                         protected Map<String, String> getParams() throws AuthFailureError {
-                            HashMap<String, String> params = new HashMap<String, String>();
+                            HashMap<String, String> params = new HashMap<>();
                             params.put(C.USER_ID, sp.getString(C.USER_ID, "0"));
                             params.put(C.NAME, name.getText().toString().trim());
                             params.put(C.STATUS, "");
@@ -126,7 +127,7 @@ public class YourData extends AppCompatActivity {
         if (requestCode == SELECT_PHOTO) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri selectedFoto = data.getData();
-                this.pict = getRealPathFromURI(selectedFoto);
+                pict = getRealPathFromURI(selectedFoto);
                 uploadImage(pict, selectedFoto);
             }
 
@@ -164,7 +165,7 @@ public class YourData extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Toast.makeText(YourData.this, response, Toast.LENGTH_SHORT).show();
-                proPict.setImageURI(selectedFoto);
+                Picasso.with(YourData.this).load(selectedFoto).fit().centerInside().into(proPict);
             }
 
         }, new Response.ErrorListener() {
@@ -176,7 +177,7 @@ public class YourData extends AppCompatActivity {
         }) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("image", encodedString);
                 params.put("name", "/profile_picture/"+sp.getString(C.USER_ID,"0")+".jpg");
                 return params;
