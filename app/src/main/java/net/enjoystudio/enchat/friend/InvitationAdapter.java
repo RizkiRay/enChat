@@ -74,6 +74,9 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.Vi
                                                 if(response.equals("s")){
                                                     arrayList.remove(position);
                                                     notifyItemRemoved(position);
+                                                    if(arrayList.size()==0){
+                                                        ((InviteActivity)context).finish();
+                                                    }
                                                 }
                                             }
                                         }, new Response.ErrorListener() {
@@ -97,6 +100,9 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.Vi
                                             if(response.equals("s")){
                                                 arrayList.remove(position);
                                                 notifyItemRemoved(position);
+                                                if(arrayList.size()==0){
+                                                    ((InviteActivity)context).finish();
+                                                }
                                             }
                                         }
                                     }, new Response.ErrorListener() {

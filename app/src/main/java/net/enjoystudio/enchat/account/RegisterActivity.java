@@ -1,4 +1,4 @@
-package net.enjoystudio.enchat;
+package net.enjoystudio.enchat.account;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,6 +22,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import net.enjoystudio.enchat.C;
+import net.enjoystudio.enchat.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;

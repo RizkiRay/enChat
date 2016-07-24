@@ -1,4 +1,4 @@
-package net.enjoystudio.enchat;
+package net.enjoystudio.enchat.account;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -25,6 +25,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import net.enjoystudio.enchat.BaseAppActivity;
+import net.enjoystudio.enchat.C;
+import net.enjoystudio.enchat.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -44,7 +48,7 @@ public class YourData extends AppCompatActivity {
 
     static String pict ="", uploadFileName="",foto="";
     private static final int SELECT_PHOTO = 100;
-    String encodedString;
+    private String encodedString;
     private final int DIALOG_ID = 0;
 
 
@@ -70,45 +74,49 @@ public class YourData extends AppCompatActivity {
         fin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pd.setMessage("updating your profile...");
-                pd.show();
-                StringRequest sr  = new StringRequest(Request.Method.POST, C.API_UPDATE_PROFILE, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        pd.dismiss();
-                        if(response.trim().toString().equals("g")){
-                            Toast.makeText(YourData.this, "Please try again", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            try {
-                                JSONObject jobj = new JSONObject(response);
-                                sp.edit().putString(C.NAME, jobj.getString(C.NAME)).apply();
-                                sp.edit().putString(C.STATUS, jobj.getString(C.STATUS)).apply();
-                                sp.edit().putString(C.PROFILE_PICTURE, jobj.getString(C.PROFILE_PICTURE)).apply();
-                                startActivity(new Intent(YourData.this, BaseAppActivity.class));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                if (name.getText().toString().trim().equals(""))
+                    Toast.makeText(YourData.this, "Please fill Your Name", Toast.LENGTH_SHORT).show();
+                else {
+                    pd.setMessage("updating your profile...");
+                    pd.show();
+                    StringRequest sr = new StringRequest(Request.Method.POST, C.API_UPDATE_PROFILE, new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            pd.dismiss();
+                            if (response.trim().toString().equals("g")) {
+                                Toast.makeText(YourData.this, "Please try again", Toast.LENGTH_SHORT).show();
+                            } else {
+                                try {
+                                    JSONObject jobj = new JSONObject(response);
+                                    sp.edit().putString(C.NAME, jobj.getString(C.NAME)).apply();
+                                    sp.edit().putString(C.STATUS, jobj.getString(C.STATUS)).apply();
+                                    sp.edit().putString(C.PROFILE_PICTURE, jobj.getString(C.PROFILE_PICTURE)).apply();
+                                    finish();
+                                    startActivity(new Intent(YourData.this, BaseAppActivity.class));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("CEK", error.toString());
-                        pd.dismiss();
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        HashMap<String,String> params = new HashMap<String, String>();
-                        params.put(C.USER_ID,sp.getString(C.USER_ID,"0"));
-                        params.put(C.NAME, name.getText().toString().trim());
-                        params.put(C.STATUS, "");
-                        params.put(C.PROFILE_PICTURE, sp.getString(C.USER_ID,"0")+".jpg");
-                        return params;
-                    }
-                };
-                Volley.newRequestQueue(YourData.this).add(sr);
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.i("CEK", error.toString());
+                            pd.dismiss();
+                        }
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            HashMap<String, String> params = new HashMap<String, String>();
+                            params.put(C.USER_ID, sp.getString(C.USER_ID, "0"));
+                            params.put(C.NAME, name.getText().toString().trim());
+                            params.put(C.STATUS, "");
+                            params.put(C.PROFILE_PICTURE, sp.getString(C.USER_ID, "0") + ".jpg");
+                            return params;
+                        }
+                    };
+                    Volley.newRequestQueue(YourData.this).add(sr);
+                }
             }
         });
     }
@@ -137,6 +145,11 @@ public class YourData extends AppCompatActivity {
             cursor.close();
         }
         return result;
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 
     public void uploadImage(String sourceFileUri, final Uri selectedFoto) {

@@ -99,9 +99,9 @@ public class AddFriend extends AppCompatActivity {
                         break;
                     }
                 }
-                if(phoneNumber.equals(sp.getString(C.PHONE,"0").trim())){
-                    isMe = true;
-                }
+                if(phoneNumber.equals(sp.getString(C.PHONE,"0").trim())) isMe = true;
+                else isMe = false;
+
                 getFriend(phoneNumber);
             }
         });

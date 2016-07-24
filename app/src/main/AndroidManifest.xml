@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashScreen">
+        <activity android:name=".SplashScreen" android:theme="@style/AppTheme.fullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,19 +21,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".account.LoginActivity"
+            android:screenOrientation="sensorPortrait"
             android:theme="@style/AppTheme.fullScreen" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".account.RegisterActivity"
+            android:screenOrientation="sensorPortrait"
             android:theme="@style/AppTheme.fullScreen" />
         <activity
+            android:screenOrientation="sensorPortrait"
             android:name=".BaseAppActivity"
             android:label="@string/title_activity_base_app" />
         <activity android:name=".conversation.Chat" />
-        <activity android:name=".friend.ProfileActivity" />
-        <activity android:name=".friend.AddFriend" />
-        <activity android:name=".YourData" />
-        <activity android:name=".friend.InviteActivity"></activity>
+        <activity android:name=".friend.ProfileActivity" android:screenOrientation="sensorPortrait"/>
+        <activity android:name=".friend.AddFriend" android:screenOrientation="sensorPortrait" />
+        <activity android:name=".account.YourData"  android:screenOrientation="sensorPortrait"/>
+        <activity android:name=".friend.InviteActivity" android:screenOrientation="sensorPortrait"></activity>
         <service android:name=".service.MessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>

@@ -64,6 +64,7 @@
 
             <EditText
                 android:id="@+id/edit_chat"
+                android:hint="type a message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/btn_send"

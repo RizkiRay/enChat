@@ -51,9 +51,12 @@ public class MessagingService extends FirebaseMessagingService {
             if (cID.equals("0")) cID = sp.getString(C.CONVERSATION + sender,"0");
             else sp.edit().putString(C.CONVERSATION + sender,cID).apply();
             Log.i("CEKKEY", cID + " tes");
-            String message = new String(AES.decrypt(remoteMessage.getData().get("message")
-                    .getBytes(Charset.forName(C.CHARSET)), cID
-                    .getBytes(Charset.forName(C.CHARSET))), Charset.forName(C.CHARSET));
+            String message = null;
+            try {
+                message = AES.decryptAES(remoteMessage.getData().get("message"), cID);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (isActive.equals("1") && id.equals(sender)) {
                 Intent intent = new Intent(C.UPDATE_MESSAGE);
                 intent.putExtra(C.CONTENT, message);

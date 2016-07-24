@@ -184,9 +184,14 @@ public class Chat extends AppCompatActivity {
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                byte[] enc = AES.encrypt(message.getBytes(Charset.forName(C.CHARSET))
-                        , cID.getBytes(Charset.forName(C.CHARSET)));
-                String cipher = new String(enc, Charset.forName(C.CHARSET));
+                String chipher = null;
+                try {
+                    chipher = AES.encryptAES(message, cID);
+                    Log.i("CEK", chipher);
+                    Log.i("CEK", AES.decryptAES(chipher, cID));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 HashMap<String, String> params = new HashMap<>();
                 if (isGenerated) params.put(C.ID,"0");
                 else {
@@ -195,7 +200,7 @@ public class Chat extends AppCompatActivity {
                 }
                 params.put(C.SENDER_ID, myId);
                 params.put(C.RECEIVER_ID, id);
-                params.put(C.CONTENT, cipher);
+                params.put(C.CONTENT, chipher);
                 return params;
             }
         };
@@ -232,9 +237,7 @@ public class Chat extends AppCompatActivity {
                             JSONObject data = list.getJSONObject(i);
                             chat.put(C.SENDER_ID, data.getString(C.SENDER_ID));
                             chat.put(C.RECEIVER_ID, data.getString(C.RECEIVER_ID));
-                            chat.put(C.CONTENT, new String(AES.decrypt(data.getString(C.CONTENT)
-                                    .getBytes(Charset.forName(C.CHARSET)), cID
-                                    .getBytes(Charset.forName(C.CHARSET))), Charset.forName(C.CHARSET)));
+                            chat.put(C.CONTENT, AES.decryptAES(data.getString(C.CONTENT), cID));
                             chat.put(C.CREATED_AT, data.getString(C.CREATED_AT));
                             chatList.add(chat);
                             adapter.notifyItemInserted(chatList.size() - 1);
@@ -243,6 +246,9 @@ public class Chat extends AppCompatActivity {
                 } catch (JSONException e) {
 
                     Log.i("CEK-CHAT-JSON", e.toString());
+                }
+                catch (Exception e){
+
                 }
             }
         }, new Response.ErrorListener() {
