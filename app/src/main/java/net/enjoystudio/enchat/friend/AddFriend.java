@@ -26,6 +26,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
+import net.enjoystudio.enchat.BuildConfig;
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
 
@@ -127,7 +128,8 @@ public class AddFriend extends AppCompatActivity {
     private void getFriend(final String strphone){
         Log.i("CEK",strphone);
         pb.setVisibility(View.VISIBLE);
-        StringRequest sr = new StringRequest(Request.Method.GET, C.API_FIND_FRIENDS + strphone,
+        StringRequest sr = new StringRequest(Request.Method.GET, C.API_FIND_FRIENDS  + BuildConfig.KEY
+                + "&phone=" + strphone,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -197,7 +199,8 @@ public class AddFriend extends AppCompatActivity {
         ProgressDialog pd = new ProgressDialog(this);
         pd.setMessage("adding friend...");
         pd.show();
-        StringRequest sr = new StringRequest(Request.Method.POST, C.API_ADD_FRIENDS, new Response.Listener<String>() {
+        StringRequest sr = new StringRequest(Request.Method.POST, C.API_ADD_FRIENDS + BuildConfig.KEY
+                , new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 if (response.equals("s")){

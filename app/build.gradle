@@ -13,7 +13,11 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        debug{
+            buildConfigField "String", "KEY", "\"xgN52u2dicTx14b2Nrze4rAyxPpj2MPMI78fFTvRqRqaDzZViTjT9Sec8qvMIPsf\""
+        }
         release {
+            buildConfigField "String", "KEY", "\"xgN52u2dicTx14b2Nrze4rAyxPpj2MPMI78fFTvRqRqaDzZViTjT9Sec8qvMIPsf\""
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

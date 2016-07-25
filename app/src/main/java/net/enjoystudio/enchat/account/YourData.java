@@ -27,6 +27,7 @@ import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
 import net.enjoystudio.enchat.BaseAppActivity;
+import net.enjoystudio.enchat.BuildConfig;
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
 
@@ -80,7 +81,8 @@ public class YourData extends AppCompatActivity {
                 else {
                     pd.setMessage("updating your profile...");
                     pd.show();
-                    StringRequest sr = new StringRequest(Request.Method.POST, C.API_UPDATE_PROFILE, new Response.Listener<String>() {
+                    StringRequest sr = new StringRequest(Request.Method.POST, C.API_UPDATE_PROFILE + BuildConfig.KEY
+                            , new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             pd.dismiss();
@@ -161,7 +163,7 @@ public class YourData extends AppCompatActivity {
         encodedString = Base64.encodeToString(byte_arr, 0);
         Log.d("cek", C.API_UPLOAD_IMAGE);
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                C.API_UPLOAD_IMAGE, new Response.Listener<String>() {
+                C.API_UPLOAD_IMAGE + BuildConfig.KEY, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Toast.makeText(YourData.this, response, Toast.LENGTH_SHORT).show();

@@ -28,6 +28,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
+import net.enjoystudio.enchat.BuildConfig;
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
 
@@ -101,6 +102,7 @@ public class FriendFragment extends Fragment {
         iv.clear();
         progressBar.setVisibility(View.VISIBLE);
         JsonArrayRequest jar = new JsonArrayRequest(Request.Method.POST, C.API_GET_FRIENDS
+                + BuildConfig.KEY + "&id="
                 + sp.getString(C.USER_ID, "0"), new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {

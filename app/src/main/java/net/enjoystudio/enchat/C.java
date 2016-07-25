@@ -30,15 +30,15 @@ public class C {
     public static final String UPDATE_MESSAGE = "update_message" ;
     public static final String UPDATE_CONVERSATION = "update_conversation" ;
 
-    public static final String API_LOGIN = "http://enjoystudio.net/enchat/api/login.php";
-    public static final String API_REGISTER = "http://enjoystudio.net/enchat/api/register.php";
-    public static final String API_UPDATE_PROFILE = "http://enjoystudio.net/enchat/api/updateProfile.php";
+    public static final String API_LOGIN = "http://enjoystudio.net/enchat/api/login.php?key=";
+    public static final String API_REGISTER = "http://enjoystudio.net/enchat/api/register.php?key=";
+    public static final String API_UPDATE_PROFILE = "http://enjoystudio.net/enchat/api/updateProfile.php?key=";
     public static final String API_IMAGE = "http://enjoystudio.net/enchat/images/";
-    public static final String API_UPLOAD_IMAGE = "http://enjoystudio.net/enchat/api/uploadPicture.php";
-    public static final String API_GET_FRIENDS = "http://enjoystudio.net/enchat/api/friends.php?id=";
-    public static final String API_FIND_FRIENDS = "http://enjoystudio.net/enchat/api/findfriend.php?phone=";
-    public static final String API_ACCEPT_FRIENDS = "http://enjoystudio.net/enchat/api/acceptFriend.php?";
-    public static final String API_REJECT_FRIENDS = "http://enjoystudio.net/enchat/api/rejectFriend.php?";
+    public static final String API_UPLOAD_IMAGE = "http://enjoystudio.net/enchat/api/uploadPicture.php?key=";
+    public static final String API_GET_FRIENDS = "http://enjoystudio.net/enchat/api/friends.php?key=";
+    public static final String API_FIND_FRIENDS = "http://enjoystudio.net/enchat/api/findfriend.php?key=";
+    public static final String API_ACCEPT_FRIENDS = "http://enjoystudio.net/enchat/api/acceptFriend.php?key=";
+    public static final String API_REJECT_FRIENDS = "http://enjoystudio.net/enchat/api/rejectFriend.php?key=";
     public static final String API_ADD_FRIENDS = "http://enjoystudio.net/enchat/api/addFriend.php";
     public static final String API_GET_MESSAGE = "http://enjoystudio.net/enchat/api/getMessage.php";
     public static final String API_SEND_MESSAGE = "http://enjoystudio.net/enchat/api/sendMessage.php";

@@ -23,6 +23,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import net.enjoystudio.enchat.BaseAppActivity;
+import net.enjoystudio.enchat.BuildConfig;
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
 
@@ -102,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (isCanContinue) {
                 pd.setMessage("Logging in...");
                 pd.show();
-                StringRequest sr = new StringRequest(Request.Method.POST, C.API_LOGIN,
+                StringRequest sr = new StringRequest(Request.Method.POST, C.API_LOGIN + BuildConfig.KEY,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {

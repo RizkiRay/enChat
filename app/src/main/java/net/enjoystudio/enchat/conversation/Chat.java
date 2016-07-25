@@ -34,6 +34,7 @@ import com.google.gson.reflect.TypeToken;
 
 import net.enjoystudio.enchat.AES;
 import net.enjoystudio.enchat.BaseAppActivity;
+import net.enjoystudio.enchat.BuildConfig;
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
 
@@ -171,7 +172,7 @@ public class Chat extends AppCompatActivity {
 
     private void sendMessage(final String message) {
 
-        StringRequest sr = new StringRequest(Request.Method.POST, C.API_SEND_MESSAGE, new Response.Listener<String>() {
+        StringRequest sr = new StringRequest(Request.Method.POST, C.API_SEND_MESSAGE + BuildConfig.KEY, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("CEK", response);
@@ -215,7 +216,7 @@ public class Chat extends AppCompatActivity {
         final ProgressDialog pd = new ProgressDialog(this);
         pd.setMessage("loading...");
         pd.show();
-        StringRequest sr = new StringRequest(Request.Method.POST, C.API_GET_MESSAGE, new Response.Listener<String>() {
+        StringRequest sr = new StringRequest(Request.Method.POST, C.API_GET_MESSAGE + BuildConfig.KEY, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 pd.dismiss();

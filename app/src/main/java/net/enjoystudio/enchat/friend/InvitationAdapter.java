@@ -21,6 +21,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
+import net.enjoystudio.enchat.BuildConfig;
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
 
@@ -66,7 +67,8 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.Vi
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.i("CEK","user1 = "+ id1 + "user2 = " + sp.getString(C.USER_ID, ""));
                                 StringRequest sr = new StringRequest(Request.Method.GET
-                                        , C.API_ACCEPT_FRIENDS + "user_1=" + id1 + "&user_2=" + sp.getString(C.USER_ID, ""),
+                                        , C.API_ACCEPT_FRIENDS + BuildConfig.KEY
+                                        + "&user_1=" + id1 + "&user_2=" + sp.getString(C.USER_ID, ""),
                                         new Response.Listener<String>() {
                                             @Override
                                             public void onResponse(String response) {
@@ -92,7 +94,9 @@ public class InvitationAdapter extends RecyclerView.Adapter<InvitationAdapter.Vi
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 StringRequest sr = new StringRequest(Request.Method.GET
-                                    , C.API_REJECT_FRIENDS + "user_1=" + id1 + "&user_2=" + sp.getString(C.USER_ID, ""),
+                                    , C.API_REJECT_FRIENDS
+                                        + BuildConfig.KEY
+                                        + "&user_1=" + id1 + "&user_2=" + sp.getString(C.USER_ID, ""),
                                     new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {

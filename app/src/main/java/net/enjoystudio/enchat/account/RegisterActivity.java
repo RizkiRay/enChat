@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import net.enjoystudio.enchat.BuildConfig;
 import net.enjoystudio.enchat.C;
 import net.enjoystudio.enchat.R;
 
@@ -124,7 +125,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (isCanContinue) {
                     pd.setMessage("registering your phone number");
                     pd.show();
-                    StringRequest sr = new StringRequest(Request.Method.POST, C.API_REGISTER,
+                    StringRequest sr = new StringRequest(Request.Method.POST, C.API_REGISTER + BuildConfig.KEY,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
