@@ -39,7 +39,7 @@ public class C {
     public static final String API_FIND_FRIENDS = "http://enjoystudio.net/enchat/api/findfriend.php?key=";
     public static final String API_ACCEPT_FRIENDS = "http://enjoystudio.net/enchat/api/acceptFriend.php?key=";
     public static final String API_REJECT_FRIENDS = "http://enjoystudio.net/enchat/api/rejectFriend.php?key=";
-    public static final String API_ADD_FRIENDS = "http://enjoystudio.net/enchat/api/addFriend.php";
-    public static final String API_GET_MESSAGE = "http://enjoystudio.net/enchat/api/getMessage.php";
-    public static final String API_SEND_MESSAGE = "http://enjoystudio.net/enchat/api/sendMessage.php";
+    public static final String API_ADD_FRIENDS = "http://enjoystudio.net/enchat/api/addFriend.php?key=";
+    public static final String API_GET_MESSAGE = "http://enjoystudio.net/enchat/api/getMessage.php?key=";
+    public static final String API_SEND_MESSAGE = "http://enjoystudio.net/enchat/api/sendMessage.php?key=";
 }

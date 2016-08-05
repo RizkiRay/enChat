@@ -114,7 +114,8 @@ public class ConversationFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.action_add){
-            Toast.makeText(getActivity(), "Add on Conversations", Toast.LENGTH_SHORT).show();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container,
+                    new FriendFragment()).commit();
         }
         return true;
     }

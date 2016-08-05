@@ -219,6 +219,7 @@ public class Chat extends AppCompatActivity {
         StringRequest sr = new StringRequest(Request.Method.POST, C.API_GET_MESSAGE + BuildConfig.KEY, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                Log.i("CEK",response);
                 pd.dismiss();
                 try {
 //                    if (chatList.size()==0){

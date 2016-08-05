@@ -215,6 +215,7 @@ public class AddFriend extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(AddFriend.this, "Check your internet connection", Toast.LENGTH_SHORT).show();
+                Log.i("CEK",error.toString());
             }
         }){
             @Override
