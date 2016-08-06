@@ -19,7 +19,7 @@
         android:id="@+id/profile_pict"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:src="@drawable/addpict"
+        android:src="@drawable/profile_pict"
         android:layout_marginBottom="66dp"/>
     <EditText
         android:id="@+id/name"
