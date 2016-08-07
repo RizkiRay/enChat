@@ -1,6 +1,5 @@
 package net.enjoystudio.enchat.service;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -24,7 +23,6 @@ import net.enjoystudio.enchat.R;
 import net.enjoystudio.enchat.conversation.Chat;
 
 import java.lang.reflect.Type;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -50,7 +48,6 @@ public class MessagingService extends FirebaseMessagingService {
         if (receiver.equals(sp.getString(C.USER_ID, "0"))) {
             if (cID.equals("0")) cID = sp.getString(C.CONVERSATION + sender,"0");
             else sp.edit().putString(C.CONVERSATION + sender,cID).apply();
-            Log.i("CEKKEY", cID + " tes");
             String message = null;
             try {
                 message = AES.decryptAES(remoteMessage.getData().get("message"), cID);
@@ -126,16 +123,4 @@ public class MessagingService extends FirebaseMessagingService {
         }
         return -1;
     }
-
-//    private String getID(String id) {
-//        int pos = getPos(id);
-//        Gson gson = new Gson();
-//        SharedPreferences sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
-//        String data = sp.getString(C.CONVERSATION, "");
-//        Type type = new TypeToken<ArrayList<HashMap<String, String>>>() {
-//        }.getType();
-//        ArrayList<HashMap<String, String>> cList = gson.fromJson(data, type);
-//        HashMap<String, String> c = cList.get(pos);
-//        return c.get(C.ID);
-//    }
 }

@@ -19,7 +19,7 @@ public class AES {
         Key key = generateKey(kunciEnkripsi);
         c.init(Cipher.ENCRYPT_MODE, key);
         byte[] encVal = c.doFinal(Data.getBytes());
-        String encryptedValue = android.util.Base64.encodeToString(encVal,16);
+        String encryptedValue = android.util.Base64.encodeToString(encVal,Base64.DEFAULT);
         return encryptedValue;
     }
 
@@ -40,6 +40,7 @@ public class AES {
         Key key = new SecretKeySpec(kunciEnkripsi.getBytes(), "AES");
         return key;
     }
+
     public static String randomString() {
         char[] characterSet = C.ALPHANUMERIK;
         int length = 32;
