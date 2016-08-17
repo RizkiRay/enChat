@@ -89,7 +89,50 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return false;
         }
     }
+    private void register(){
+        pd.setMessage("registering your phone number");
+        pd.show();
+        StringRequest sr = new StringRequest(Request.Method.POST, C.API_REGISTER + BuildConfig.KEY,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        pd.dismiss();
+                        if(response.trim().toString().equals("g")){
+                            Toast.makeText(RegisterActivity.this, "Phone number already registered", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            try {
+                                JSONObject jobj = new JSONObject(response);
+                                sp.edit().putString(C.USER_ID, jobj.getString(C.USER_ID)).commit();
+                                startActivity(new Intent(RegisterActivity.this, YourData.class));
+                                finish();
 
+                            } catch (JSONException e) {
+                                Log.i("CEK", e.toString());
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                pd.dismiss();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String,String> params = new HashMap<>();
+                params.put(C.PHONE, editPhone.getText().toString().trim());
+                params.put(C.PASSWORD, editPass.getText().toString().trim());
+                return params;
+            }
+        };
+        sr.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        Volley.newRequestQueue(this).add(sr);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,48 +166,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                 boolean isCanContinue = !(isPhoneInCorrect||isPassInCorrect||isPassNotMatch);
                 if (isCanContinue) {
-                    pd.setMessage("registering your phone number");
-                    pd.show();
-                    StringRequest sr = new StringRequest(Request.Method.POST, C.API_REGISTER + BuildConfig.KEY,
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    pd.dismiss();
-                                    if(response.trim().toString().equals("g")){
-                                        Toast.makeText(RegisterActivity.this, "Phone number already registered", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else {
-                                        try {
-                                            JSONObject jobj = new JSONObject(response);
-                                            sp.edit().putString(C.USER_ID, jobj.getString(C.USER_ID)).commit();
-                                            startActivity(new Intent(RegisterActivity.this, YourData.class));
-                                            finish();
-
-                                        } catch (JSONException e) {
-                                            Log.i("CEK", e.toString());
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            pd.dismiss();
-                        }
-                    }){
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            HashMap<String,String> params = new HashMap<>();
-                            params.put(C.PHONE, editPhone.getText().toString().trim());
-                            params.put(C.PASSWORD, editPass.getText().toString().trim());
-                            return params;
-                        }
-                    };
-                    sr.setRetryPolicy(new DefaultRetryPolicy(
-                            0,
-                            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                    Volley.newRequestQueue(this).add(sr);
+                    register();
                 }
                 break;
         }

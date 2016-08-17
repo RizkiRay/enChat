@@ -18,7 +18,6 @@ public class SplashScreen extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
         FirebaseMessaging.getInstance().subscribeToTopic("enChat");
-//        FirebaseInstanceId.getInstance().getToken();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

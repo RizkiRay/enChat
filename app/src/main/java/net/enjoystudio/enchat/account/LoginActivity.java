@@ -91,6 +91,49 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         sp = getSharedPreferences(C.SESSION, MODE_PRIVATE);
         pd = new ProgressDialog(this);
     }
+    private void auth(){
+        pd.setMessage("Logging in...");
+        pd.show();
+        StringRequest sr = new StringRequest(Request.Method.POST, C.API_LOGIN + BuildConfig.KEY,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        pd.dismiss();
+                        if (response.trim().equals("g")) {
+                            Toast.makeText(LoginActivity.this,
+                                    "phone and password is not match",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            try {
+                                JSONObject jobj = new JSONObject(response);
+                                sp.edit().putString(C.USER_ID, jobj.getString(C.USER_ID)).apply();
+                                sp.edit().putString(C.NAME, jobj.getString(C.NAME)).apply();
+                                sp.edit().putString(C.STATUS, jobj.getString(C.STATUS)).apply();
+                                sp.edit().putString(C.PROFILE_PICTURE, jobj.getString(C.PROFILE_PICTURE)).apply();
+                                sp.edit().putString(C.PHONE, jobj.getString(C.PHONE)).apply();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            startActivity(new Intent(LoginActivity.this, BaseAppActivity.class));
+                            finish();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                pd.dismiss();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put(C.PHONE, editPhone.getText().toString().trim());
+                params.put(C.PASSWORD, editPass.getText().toString().trim());
+                return params;
+            }
+        };
+        Volley.newRequestQueue(this).add(sr);
+    }
 
     @Override
     public void onClick(View v) {
@@ -101,48 +144,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 boolean isPassInCorrect = checkPassInput();
                 boolean isCanContinue = !(isPhoneInCorrect || isPassInCorrect);
                 if (isCanContinue) {
-                pd.setMessage("Logging in...");
-                pd.show();
-                StringRequest sr = new StringRequest(Request.Method.POST, C.API_LOGIN + BuildConfig.KEY,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                pd.dismiss();
-                                if (response.trim().equals("g")) {
-                                    Toast.makeText(LoginActivity.this,
-                                            "phone and password is not match",
-                                            Toast.LENGTH_SHORT).show();
-                                } else {
-                                    try {
-                                        JSONObject jobj = new JSONObject(response);
-                                        sp.edit().putString(C.USER_ID, jobj.getString(C.USER_ID)).apply();
-                                        sp.edit().putString(C.NAME, jobj.getString(C.NAME)).apply();
-                                        sp.edit().putString(C.STATUS, jobj.getString(C.STATUS)).apply();
-                                        sp.edit().putString(C.PROFILE_PICTURE, jobj.getString(C.PROFILE_PICTURE)).apply();
-                                        sp.edit().putString(C.PHONE, jobj.getString(C.PHONE)).apply();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    startActivity(new Intent(LoginActivity.this, BaseAppActivity.class));
-                                    finish();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.i("CEK", error.toString());
-                        pd.dismiss();
-                    }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        HashMap<String, String> params = new HashMap<>();
-                        params.put(C.PHONE, editPhone.getText().toString().trim());
-                        params.put(C.PASSWORD, editPass.getText().toString().trim());
-                        return params;
-                    }
-                };
-                Volley.newRequestQueue(this).add(sr);
+                    auth();
                 }
                 //startActivity(new Intent(this,BaseAppActivity.class));
                 break;

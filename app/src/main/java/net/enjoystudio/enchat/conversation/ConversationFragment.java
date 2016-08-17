@@ -65,18 +65,6 @@ public class ConversationFragment extends Fragment {
             recylerView.setVisibility(View.VISIBLE);
         }
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Conversations");
-//        HashMap<String,String> data = new HashMap<>();
-//        data.put(C.PHOTO,Integer.toString(R.drawable.john));
-//        data.put(C.NAME,"John");
-//        data.put(C.CHAT,"Hi how are you ? ");
-//        data.put(C.DATE, "21:30");
-//        dataList.add(data);
-//        data = new HashMap<>();
-//        data.put(C.PHOTO,Integer.toString(R.drawable.maryjane));
-//        data.put(C.NAME,"Mary Jane");
-//        data.put(C.CHAT,"Hi brotheerr ");
-//        data.put(C.DATE, "21:35");
-//        dataList.add(data);
         adapter = new ConversationAdapter(dataList);
         recylerView.setAdapter(adapter);
         setHasOptionsMenu(true);
