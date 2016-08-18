@@ -42,11 +42,11 @@
         android:background="@color/colorDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"/>
-    <!--<TextView-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_margin="8dp"-->
-        <!--android:id="@+id/date"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Apr 21"/>-->
+    <TextView
+        android:layout_alignParentRight="true"
+        android:layout_margin="8dp"
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Apr 21"/>
 </RelativeLayout>
